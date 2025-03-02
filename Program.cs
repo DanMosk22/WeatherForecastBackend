@@ -10,10 +10,25 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AzureSQL"))
 );
 
+// Data access Objects
+builder.Services.AddScoped<ForecastDAO>();
+
 builder.Services.AddControllers();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
 
 var app = builder.Build();
 app.UseHttpsRedirection();
+app.UseCors("AllowAllOrigins");
 app.UseAuthorization();
 app.MapControllers();
 

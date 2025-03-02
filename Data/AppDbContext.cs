@@ -16,5 +16,13 @@ public class AppDbContext : DbContext
             .WithMany(p => p.Forecasts)
             .HasForeignKey(pr => pr.LocationID)
             .OnDelete(DeleteBehavior.Cascade);
+            
+        modelBuilder.Entity<Forecast>()
+            .HasIndex(f => new { f.LocationID, f.Date })
+            .IsUnique();
+
+        modelBuilder.Entity<Location>()
+            .HasIndex(loc => new{loc.Lat, loc.Lon} )
+            .IsUnique();
     }
 }
